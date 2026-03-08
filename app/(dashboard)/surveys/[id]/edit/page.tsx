@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
 import { SurveyEditor } from '@/components/survey-builder/SurveyEditor';
 import { notFound } from 'next/navigation';
+import { Choice } from '@/types';
 
 export default async function EditSurveyPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const supabase = await createClient();
   const { id } = await params;
@@ -38,7 +39,7 @@ export default async function EditSurveyPage({
   // Ensure choices are also ordered by order_index
   const questionsWithOrderedChoices = questions?.map(q => ({
     ...q,
-    choices: q.choices?.sort((a: any, b: any) => a.order_index - b.order_index)
+    choices: (q.choices as Choice[])?.sort((a, b) => a.order_index - b.order_index) || []
   })) || [];
 
   return (

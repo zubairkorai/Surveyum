@@ -3,6 +3,27 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+
+export async function signInWithSocial(provider: 'google') {
+  const supabase = await createClient();
+  const origin = (await headers()).get('origin');
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return redirect(`/login?message=${error.message}`);
+  }
+
+  if (data.url) {
+    redirect(data.url);
+  }
+}
 
 export async function login(formData: FormData) {
   const supabase = await createClient();

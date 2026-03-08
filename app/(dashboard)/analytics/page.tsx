@@ -7,8 +7,8 @@ import { Question, Choice } from '@/types';
 
 type QuestionWithStats = Question & {
   answerCount: number;
-  chartData: any[];
-  rawAnswers: any[];
+  chartData: { name: string; value: number }[];
+  rawAnswers: string[];
 };
 
 async function getAnalyticsData(surveyId: string) {
@@ -41,7 +41,7 @@ async function getAnalyticsData(surveyId: string) {
 
   const stats = questions?.map(q => {
     const questionAnswers = answers?.filter(a => a.question_id === q.id) || [];
-    let chartData: any[] = [];
+    let chartData: { name: string; value: number }[] = [];
 
     if (['multiple_choice', 'dropdown', 'rating', 'nps'].includes(q.question_type)) {
       const counts: Record<string, number> = {};
@@ -71,11 +71,16 @@ async function getAnalyticsData(surveyId: string) {
       chartData = Object.entries(counts).map(([name, value]) => ({ name, value }));
     }
 
+    const rawAnswers = questionAnswers
+      .slice(0, 5)
+      .map(a => a.value)
+      .filter((v): v is string => v !== null && v !== '');
+
     return {
       ...q,
       answerCount: questionAnswers.length,
       chartData,
-      rawAnswers: questionAnswers.slice(0, 5).map(a => a.value).filter(Boolean),
+      rawAnswers,
     } as QuestionWithStats;
   });
 
@@ -168,14 +173,14 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: { 
               </span>
             </div>
 
-            {['multiple_choice', 'dropdown', 'rating', 'checkbox', 'nps'].includes(q.question_type) ? (
+            {['multiple_choice', 'dropdown', 'rating', 'checkbox', 'nps', 'likert_scale', 'yes_no'].includes(q.question_type) ? (
               <div className="bg-gray-50/50 rounded-xl p-4 border border-gray-50">
                 <AnalyticsChart data={q.chartData} type={['checkbox', 'nps'].includes(q.question_type) ? 'bar' : 'pie'} />
               </div>
             ) : (
               <div className="space-y-2">
                 {q.rawAnswers.length > 0 ? (
-                  q.rawAnswers.map((ans, i) => (
+                  q.rawAnswers.map((ans: string, i: number) => (
                     <div key={i} className="p-3.5 bg-gray-50 rounded-xl text-xs font-semibold text-gray-600 border border-gray-100/50">
                       {ans}
                     </div>

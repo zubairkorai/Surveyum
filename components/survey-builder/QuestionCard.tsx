@@ -12,7 +12,7 @@ interface QuestionCardProps {
   addChoice: (questionId: string) => void;
   updateChoice: (questionId: string, choiceId: string, label: string) => void;
   removeChoice: (questionId: string, choiceId: string) => void;
-  dragHandleProps?: any;
+  dragHandleProps?: Record<string, any>;
 }
 
 export function QuestionCard({
@@ -44,7 +44,7 @@ export function QuestionCard({
   const isChoiceBased = ['multiple_choice', 'checkbox', 'dropdown', 'likert_scale', 'yes_no'].includes(question.question_type);
 
   return (
-    <div className="bg-white border rounded-3xl p-8 shadow-sm group relative hover:border-blue-300 transition-all">
+    <div className="bg-white border rounded-3xl p-8 shadow-sm group relative hover:border-blue-300 transition-all text-gray-900">
       {/* Drag Handle */}
       <div 
         {...dragHandleProps} 
@@ -146,15 +146,15 @@ export function QuestionCard({
         {/* NPS Visual */}
         {question.question_type === 'nps' && (
           <div className="mt-4">
-            <div className="flex gap-1 mb-2">
+            <div className="flex gap-1 mb-2 overflow-x-auto no-scrollbar">
               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
-                <div key={i} className="flex-1 h-10 border-2 border-gray-100 rounded-lg flex items-center justify-center text-gray-300 font-bold text-xs">
+                <div key={i} className="flex-1 min-w-[30px] h-10 border-2 border-gray-100 rounded-lg flex items-center justify-center text-gray-300 font-bold text-xs">
                   {i}
                 </div>
               ))}
             </div>
             <div className="flex justify-between text-[10px] font-black text-gray-400 uppercase tracking-tighter">
-              <span>Not likely at all</span>
+              <span>Not likely</span>
               <span>Extremely likely</span>
             </div>
           </div>
@@ -171,7 +171,7 @@ export function QuestionCard({
         )}
 
         {question.question_type === 'rating' && (
-          <div className="flex gap-2 mt-2">
+          <div className="flex flex-wrap gap-2 mt-2">
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="w-10 h-10 border-2 border-gray-100 rounded-xl flex items-center justify-center text-gray-300 font-bold">
                 {i}

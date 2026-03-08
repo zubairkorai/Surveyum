@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
-export async function submitResponse(surveyId: string, answers: Record<string, any>) {
+export async function submitResponse(surveyId: string, answers: Record<string, unknown>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

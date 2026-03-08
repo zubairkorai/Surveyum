@@ -19,7 +19,7 @@ import {
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useSurveyBuilder } from '@/hooks/use-survey-builder';
 import { SortableQuestion } from './SortableQuestion';
-import { QuestionType, Survey, Question } from '@/types';
+import { QuestionType, Survey, Question, Choice } from '@/types';
 import { Type, CheckSquare, List, ChevronDown, Calendar, Star, Save, Eye, Loader2, X, Mail, CheckCircle2, BarChart, Zap } from 'lucide-react';
 import { saveSurvey } from '@/app/(dashboard)/surveys/actions';
 import { toast } from 'sonner';
@@ -171,7 +171,7 @@ export function SurveyEditor({ initialSurvey, initialQuestions }: SurveyEditorPr
             <div className="p-4 border-b bg-white flex items-center justify-between sticky top-0 z-10">
               <div className="flex items-center gap-2">
                 <Eye className="w-5 h-5 text-blue-600" />
-                <h2 className="font-black text-gray-900 uppercase tracking-widest text-xs">Live Preview</h2>
+                <h2 className="font-black text-gray-900 uppercase tracking-widest text-sm">Live Preview</h2>
               </div>
               <button onClick={() => setIsPreviewOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500 hover:text-gray-900">
                 <X className="w-6 h-6" />
@@ -180,7 +180,7 @@ export function SurveyEditor({ initialSurvey, initialQuestions }: SurveyEditorPr
             <div className="flex-1 overflow-y-auto pb-12">
               <SurveyResponseForm 
                 survey={{ id: 'preview', title, description: '', is_published: false, user_id: '', created_at: '', updated_at: '' }} 
-                questions={questions as any} 
+                questions={questions as (Question & { choices: Choice[] })[]} 
               />
             </div>
           </div>

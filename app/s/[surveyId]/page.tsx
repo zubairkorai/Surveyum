@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
 import { SurveyResponseForm } from '@/components/SurveyResponseForm';
 import { notFound } from 'next/navigation';
+import { Choice, Question } from '@/types';
 
 export default async function PublicSurveyPage({
   params,
 }: {
-  params: { surveyId: string };
+  params: Promise<{ surveyId: string }>;
 }) {
   const supabase = await createClient();
   const { surveyId } = await params;
@@ -36,16 +37,16 @@ export default async function PublicSurveyPage({
   }
 
   // Ensure choices are ordered
-  const questionsWithOrderedChoices = questions?.map(q => ({
+  const questionsWithOrderedChoices = (questions as (Question & { choices: Choice[] })[])?.map(q => ({
     ...q,
-    choices: q.choices?.sort((a: any, b: any) => a.order_index - b.order_index)
+    choices: q.choices?.sort((a, b) => a.order_index - b.order_index) || []
   })) || [];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <SurveyResponseForm 
         survey={survey} 
-        questions={questionsWithOrderedChoices as any} 
+        questions={questionsWithOrderedChoices} 
       />
     </div>
   );

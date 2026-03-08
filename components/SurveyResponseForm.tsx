@@ -12,8 +12,10 @@ interface SurveyResponseFormProps {
   questions: (Question & { choices: Choice[] })[];
 }
 
+type AnswerValue = string | number | string[] | null;
+
 export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProps) {
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -23,13 +25,13 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
     return Math.round((answeredCount / questions.length) * 100);
   }, [answers, questions.length]);
 
-  const handleInputChange = (questionId: string, value: any) => {
+  const handleInputChange = (questionId: string, value: AnswerValue) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
   const handleCheckboxChange = (questionId: string, choiceValue: string, checked: boolean) => {
     setAnswers(prev => {
-      const currentValues = prev[questionId] || [];
+      const currentValues = (prev[questionId] as string[]) || [];
       if (checked) return { ...prev, [questionId]: [...currentValues, choiceValue] };
       else return { ...prev, [questionId]: currentValues.filter((v: string) => v !== choiceValue) };
     });
@@ -162,13 +164,13 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                 {q.choices.map((c) => (
                   <label key={c.id} className={cn(
                     "flex items-center gap-3 cursor-pointer group/label p-4 rounded-xl border-2 transition-all duration-200 select-none",
-                    answers[q.id]?.includes(c.value) ? "bg-blue-600 border-blue-600 shadow-md shadow-blue-100" : "bg-white border-gray-50 hover:border-blue-100 hover:bg-blue-50/20"
+                    (answers[q.id] as string[])?.includes(c.value) ? "bg-blue-600 border-blue-600 shadow-md shadow-blue-100" : "bg-white border-gray-50 hover:border-blue-100 hover:bg-blue-50/20"
                   )}>
                     <input type="checkbox" className="sr-only" onChange={(e) => handleCheckboxChange(q.id, c.value, e.target.checked)} />
-                    <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-all", answers[q.id]?.includes(c.value) ? "bg-white border-white" : "bg-white border-gray-200 group-hover/label:border-blue-400")}>
-                      {answers[q.id]?.includes(c.value) && <Check className="w-3 h-3 text-blue-600" strokeWidth={4} />}
+                    <div className={cn("w-4 h-4 rounded border flex items-center justify-center transition-all", (answers[q.id] as string[])?.includes(c.value) ? "bg-white border-white" : "bg-white border-gray-200 group-hover/label:border-blue-400")}>
+                      {(answers[q.id] as string[])?.includes(c.value) && <Check className="w-3 h-3 text-blue-600" strokeWidth={4} />}
                     </div>
-                    <span className={cn("text-sm font-bold leading-none", answers[q.id]?.includes(c.value) ? "text-white" : "text-gray-600 group-hover/label:text-gray-900")}>{c.label}</span>
+                    <span className={cn("text-sm font-bold leading-none", (answers[q.id] as string[])?.includes(c.value) ? "text-white" : "text-gray-600 group-hover/label:text-gray-900")}>{c.label}</span>
                   </label>
                 ))}
               </div>

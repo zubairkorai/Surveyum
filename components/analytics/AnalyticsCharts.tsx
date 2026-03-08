@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, Legend 
@@ -8,8 +8,13 @@ import {
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
+interface ChartDataPoint {
+  name: string;
+  value: number;
+}
+
 interface ChartProps {
-  data: any[];
+  data: ChartDataPoint[];
   type: string;
 }
 

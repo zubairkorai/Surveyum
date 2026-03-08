@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { login } from '../actions';
 import { ArrowLeft } from 'lucide-react';
+import { SocialAuth } from '@/components/SocialAuth';
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { message: string };
+  searchParams: Promise<{ message: string }>;
 }) {
+  const { message } = await searchParams;
+
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-6">
       <Link
@@ -57,9 +60,11 @@ export default function LoginPage({
             Sign In
           </button>
 
-          {searchParams?.message && (
+          <SocialAuth />
+
+          {message && (
             <div className="mt-4 p-4 bg-amber-50 border border-amber-100 text-amber-800 text-sm font-medium text-center rounded-xl animate-in fade-in slide-in-from-top-2">
-              {searchParams.message}
+              {message}
             </div>
           )}
 
