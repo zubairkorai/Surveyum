@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient();
@@ -22,9 +23,9 @@ export async function updateProfile(formData: FormData) {
     .eq('id', user.id);
 
   if (error) {
-    return { success: false, message: error.message };
+    redirect(`/profile?success=false&message=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath('/profile');
-  return { success: true, message: 'Profile updated successfully!' };
+  redirect('/profile?success=true&message=' + encodeURIComponent('Profile updated successfully!'));
 }

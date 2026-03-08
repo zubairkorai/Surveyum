@@ -5,8 +5,9 @@ import { User, Mail, Camera, Save, CheckCircle } from 'lucide-react';
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: { message?: string; success?: string };
+  searchParams: Promise<{ message?: string; success?: string }>;
 }) {
+  const { message, success } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -17,13 +18,13 @@ export default async function ProfilePage({
     .single();
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
+    <div className="p-8 max-w-2xl mx-auto text-gray-900">
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Your Profile</h1>
         <p className="text-gray-500 mt-2 font-medium">Manage your personal information and account settings.</p>
       </div>
 
-      <div className="bg-white border rounded-3xl p-8 shadow-xl shadow-blue-50/50">
+      <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-blue-100/50">
         <form action={updateProfile} className="space-y-6">
           {/* Avatar Section */}
           <div className="flex flex-col items-center gap-4 mb-8">
@@ -37,7 +38,7 @@ export default async function ProfilePage({
                 <Camera className="w-6 h-6 text-white" />
               </div>
             </div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Profile Picture</p>
+            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest text-center">Profile Picture</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6">
@@ -90,11 +91,11 @@ export default async function ProfilePage({
             Save Profile Changes
           </button>
 
-          {searchParams?.message && (
+          {message && (
             <div className={`p-4 rounded-xl text-sm font-medium text-center animate-in fade-in slide-in-from-top-2 ${
-              searchParams.success === 'true' ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-amber-50 text-amber-800 border border-amber-100'
+              success === 'true' ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-amber-50 text-amber-800 border border-amber-100'
             }`}>
-              {searchParams.message}
+              {message}
             </div>
           )}
         </form>

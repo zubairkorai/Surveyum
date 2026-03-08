@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
-import Link from 'next/link';
+import Link from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { AnalyticsChart } from '@/components/analytics/AnalyticsCharts';
 import { BarChart2, Users, CheckCircle, Clock, ChevronLeft } from 'lucide-react';
 import { Question, Choice } from '@/types';
+import LinkActual from 'next/link';
 
 type QuestionWithStats = Question & {
   answerCount: number;
@@ -43,7 +44,7 @@ async function getAnalyticsData(surveyId: string) {
     const questionAnswers = answers?.filter(a => a.question_id === q.id) || [];
     let chartData: { name: string; value: number }[] = [];
 
-    if (['multiple_choice', 'dropdown', 'rating', 'nps'].includes(q.question_type)) {
+    if (['multiple_choice', 'dropdown', 'rating', 'nps', 'likert_scale', 'yes_no'].includes(q.question_type)) {
       const counts: Record<string, number> = {};
       if (q.question_type === 'rating') [1, 2, 3, 4, 5].forEach(n => counts[n] = 0);
       else if (q.question_type === 'nps') [0,1,2,3,4,5,6,7,8,9,10].forEach(n => counts[n] = 0);
@@ -52,7 +53,7 @@ async function getAnalyticsData(surveyId: string) {
       questionAnswers.forEach(a => {
         if (a.value !== null) {
           const choice = q.choices?.find((c: Choice) => c.value === a.value);
-          const key = choice ? choice.label : a.value;
+          const key = choice ? choice.label : String(a.value);
           counts[key] = (counts[key] || 0) + 1;
         }
       });
@@ -87,7 +88,7 @@ async function getAnalyticsData(surveyId: string) {
   return { survey, responseCount: responses?.length || 0, questions: (stats || []) as QuestionWithStats[] };
 }
 
-export default async function AnalyticsPage({ searchParams }: { searchParams: { id?: string } }) {
+export default async function AnalyticsPage({ searchParams }: { searchParams: Promise<{ id?: string }> }) {
   const { id } = await searchParams;
 
   if (!id) {
@@ -104,7 +105,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: { 
         <h1 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">Select a Survey</h1>
         <div className="grid grid-cols-1 gap-3">
           {surveys?.map((s) => (
-            <Link 
+            <LinkActual 
               key={s.id} 
               href={`/analytics?id=${s.id}`}
               className="bg-white border border-gray-100 rounded-xl p-5 hover:border-blue-500 transition-all shadow-sm flex items-center justify-between group"
@@ -114,7 +115,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: { 
                 <p className="text-[11px] text-gray-400 font-medium mt-1 uppercase tracking-wider">Created {new Date(s.created_at).toLocaleDateString()}</p>
               </div>
               <ChevronLeft className="w-4 h-4 text-gray-300 group-hover:text-blue-500 rotate-180 transition-all" />
-            </Link>
+            </LinkActual>
           ))}
         </div>
       </div>
@@ -126,10 +127,10 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: { 
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <Link href="/analytics" className="flex items-center gap-2 text-[11px] text-gray-400 hover:text-gray-900 mb-8 transition-colors font-bold uppercase tracking-widest">
+      <LinkActual href="/analytics" className="flex items-center gap-2 text-[11px] text-gray-400 hover:text-gray-900 mb-8 transition-colors font-bold uppercase tracking-widest">
         <ChevronLeft className="w-3 h-3" />
         Back to list
-      </Link>
+      </LinkActual>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
