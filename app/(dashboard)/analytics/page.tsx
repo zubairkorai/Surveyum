@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
-import Link from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { AnalyticsChart } from '@/components/analytics/AnalyticsCharts';
-import { BarChart2, Users, CheckCircle, Clock, ChevronLeft } from 'lucide-react';
+import { Users, CheckCircle, Clock, ChevronLeft } from 'lucide-react';
 import { Question, Choice } from '@/types';
 import LinkActual from 'next/link';
 
@@ -62,7 +61,7 @@ async function getAnalyticsData(surveyId: string) {
       const counts: Record<string, number> = {};
       q.choices?.forEach((c: Choice) => counts[c.label] = 0);
       questionAnswers.forEach(a => {
-        const selected = a.selected_choices as string[] || [];
+        const selected = (a.selected_choices as string[]) || [];
         selected.forEach(val => {
           const choice = q.choices?.find((c: Choice) => c.value === val);
           const key = choice ? choice.label : val;
@@ -74,8 +73,8 @@ async function getAnalyticsData(surveyId: string) {
 
     const rawAnswers = questionAnswers
       .slice(0, 5)
-      .map(a => a.value)
-      .filter((v): v is string => v !== null && v !== '');
+      .map(a => String(a.value))
+      .filter((v): v is string => v !== null && v !== 'null' && v !== '');
 
     return {
       ...q,
@@ -85,10 +84,18 @@ async function getAnalyticsData(surveyId: string) {
     } as QuestionWithStats;
   });
 
-  return { survey, responseCount: responses?.length || 0, questions: (stats || []) as QuestionWithStats[] };
+  return { 
+    survey, 
+    responseCount: responses?.length || 0, 
+    questions: (stats || []) as QuestionWithStats[] 
+  };
 }
 
-export default async function AnalyticsPage({ searchParams }: { searchParams: Promise<{ id?: string }> }) {
+export default async function AnalyticsPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ id?: string }> 
+}) {
   const { id } = await searchParams;
 
   if (!id) {
@@ -160,7 +167,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {data.questions.map((q, idx) => (
+        {data.questions.map((q: QuestionWithStats, idx: number) => (
           <div key={q.id} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-base font-bold text-gray-900 flex items-center gap-3">
