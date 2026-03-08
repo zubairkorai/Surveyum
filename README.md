@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SurveyPlatform - SaaS Survey Tool
 
-## Getting Started
+A production-ready, full-stack SaaS survey platform similar to SurveyMonkey, built with modern web technologies.
 
-First, run the development server:
+## 🚀 Features
 
+- **Auth System:** Secure Sign-up, Login, and Logout using Supabase Auth.
+- **Drag-and-Drop Builder:** Intuitive survey creation using `@dnd-kit`.
+- **7+ Question Types:** Short Text, Long Text, Multiple Choice, Checkboxes, Dropdown, Rating, and Date.
+- **Real-time Persistence:** Saves survey drafts and updates to Supabase PostgreSQL.
+- **Public Survey Engine:** Shared links for anyone to respond to published surveys.
+- **Analytics Dashboard:** Beautiful data visualization with Recharts (Pie/Bar charts).
+- **Security:** Row Level Security (RLS) ensuring users only see their own surveys and results.
+- **Responsive UI:** Clean, modern dashboard built with Tailwind CSS and Lucide icons.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** [Next.js 14 (App Router)](https://nextjs.org/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Backend/DB:** [Supabase](https://supabase.com/) (Auth, PostgreSQL, RLS)
+- **Charts:** [Recharts](https://recharts.org/)
+- **Drag & Drop:** [dnd-kit](https://dnd-kit.com/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Toasts:** [Sonner](https://sonner.emilkowal.ski/)
+
+## 📦 Getting Started
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd survey-platform
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Setup Supabase
+1. Create a new project on [Supabase](https://supabase.com/).
+2. Go to the **SQL Editor** and paste the contents of `supabase/schema.sql`. Run the script to create tables and RLS policies.
+3. Get your **Project URL** and **Anon Key** from Project Settings > API.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Environment Variables
+Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
 
-## Learn More
+### 5. Run the development server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-To learn more about Next.js, take a look at the following resources:
+## 📝 Folder Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/app`: Next.js App Router (Auth, Dashboard, Public routes)
+- `/components`: Reusable UI and Survey Builder components
+- `/hooks`: Custom React hooks (e.g., `useSurveyBuilder`)
+- `/lib`: Utility functions and Supabase clients
+- `/supabase`: Database schema and RLS policies
+- `/types`: TypeScript interfaces
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📜 License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,65 +1,98 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { ArrowRight, BarChart2, LayoutDashboard, Zap } from 'lucide-react';
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">S</div>
+          <span className="text-xl font-bold text-gray-900">Surveyum</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="flex items-center gap-4">
+          <Link href="/login" className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+            Log In
+          </Link>
+          <Link 
+            href="/register" 
+            className="px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all shadow-md active:scale-95"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Get Started
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto py-20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider mb-8">
+          <Zap className="w-3 h-3" />
+          The ultimate survey builder
+        </div>
+        
+        <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 tracking-tight mb-8 leading-[1.1]">
+          Build smarter surveys in <span className="text-blue-600">minutes</span>
+        </h1>
+        
+        <p className="text-xl text-gray-500 mb-12 max-w-2xl leading-relaxed">
+          Create, share, and analyze surveys with our intuitive drag-and-drop builder. 
+          Collect powerful insights and make data-driven decisions today.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <Link 
+            href="/register" 
+            className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-xl hover:shadow-blue-200 active:scale-95 text-lg"
           >
-            Documentation
-          </a>
+            Create Your First Survey
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link 
+            href="/login" 
+            className="px-8 py-4 bg-white text-gray-900 font-bold rounded-2xl border-2 border-gray-100 hover:border-gray-200 transition-all text-lg"
+          >
+            View Demo
+          </Link>
+        </div>
+
+        {/* Features Preview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 w-full text-left">
+          <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100">
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 text-blue-600">
+              <LayoutDashboard className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-3">Drag & Drop Builder</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Intuitive interface to build complex surveys without writing a single line of code.
+            </p>
+          </div>
+
+          <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100">
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 text-green-600">
+              <Zap className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-3">Instant Insights</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Real-time response tracking and automatic data processing for immediate analysis.
+            </p>
+          </div>
+
+          <div className="p-8 bg-gray-50 rounded-3xl border border-gray-100">
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 text-purple-600">
+              <BarChart2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-3">Visual Analytics</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Beautiful charts and graphs that help you visualize survey results effortlessly.
+            </p>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="py-12 border-t text-center text-gray-400 text-sm">
+        <p>© 2026 Surveyum. Built with Next.js and Supabase.</p>
+      </footer>
     </div>
   );
 }
