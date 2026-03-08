@@ -5,6 +5,12 @@ import { AnalyticsChart } from '@/components/analytics/AnalyticsCharts';
 import { BarChart2, Users, CheckCircle, Clock, ChevronLeft } from 'lucide-react';
 import { Question, Choice } from '@/types';
 
+type QuestionWithStats = Question & {
+  answerCount: number;
+  chartData: any[];
+  rawAnswers: any[];
+};
+
 async function getAnalyticsData(surveyId: string) {
   const supabase = await createClient();
 
@@ -70,10 +76,10 @@ async function getAnalyticsData(surveyId: string) {
       answerCount: questionAnswers.length,
       chartData,
       rawAnswers: questionAnswers.slice(0, 5).map(a => a.value).filter(Boolean),
-    };
+    } as QuestionWithStats;
   });
 
-  return { survey, responseCount: responses?.length || 0, questions: stats || [] };
+  return { survey, responseCount: responses?.length || 0, questions: (stats || []) as QuestionWithStats[] };
 }
 
 export default async function AnalyticsPage({ searchParams }: { searchParams: { id?: string } }) {
