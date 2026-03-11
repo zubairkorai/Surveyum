@@ -108,7 +108,7 @@ export default async function AnalyticsPage({
       .order('created_at', { ascending: false });
 
     return (
-      <div className="p-8 max-w-4xl mx-auto">
+      <div className="p-4 md:p-8 max-w-4xl mx-auto">
         <h1 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">Select a Survey</h1>
         <div className="grid grid-cols-1 gap-3">
           {surveys?.map((s) => (
@@ -133,7 +133,7 @@ export default async function AnalyticsPage({
   if (!data) return notFound();
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 md:p-8 max-w-5xl mx-auto">
       <LinkActual href="/analytics" className="flex items-center gap-2 text-[11px] text-gray-400 hover:text-gray-900 mb-8 transition-colors font-bold uppercase tracking-widest">
         <ChevronLeft className="w-3 h-3" />
         Back to list

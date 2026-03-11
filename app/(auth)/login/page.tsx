@@ -48,7 +48,7 @@ export default async function LoginPage({
               <label className="text-sm font-medium text-gray-700" htmlFor="password">
                 Password
               </label>
-              <Link href="/forgot-password" size="sm" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">Forgot password?</Link>
+              <Link href="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">Forgot password?</Link>
             </div>
             <input
               className="rounded-lg px-4 py-2.5 bg-white border border-gray-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 transition-all outline-none text-sm"

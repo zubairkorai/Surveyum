@@ -25,11 +25,44 @@ export function useSurveyBuilder(initialQuestions: Question[] = []) {
           { id: uuidv4(), question_id: '', label: 'Agree', value: '4', order_index: 3 },
           { id: uuidv4(), question_id: '', label: 'Strongly Agree', value: '5', order_index: 4 }
         ];
+      } else if (type === 'matrix') {
+        choices = [
+          { id: uuidv4(), question_id: '', label: 'Column 1', value: 'col1', order_index: 0 },
+          { id: uuidv4(), question_id: '', label: 'Column 2', value: 'col2', order_index: 1 }
+        ];
+      } else if (type === 'ranking' || type === 'image_choice') {
+        choices = [
+          { id: uuidv4(), question_id: '', label: 'Option 1', value: 'opt1', order_index: 0 },
+          { id: uuidv4(), question_id: '', label: 'Option 2', value: 'opt2', order_index: 1 }
+        ];
+      } else if (type === 'best_worst') {
+        choices = [
+          { id: uuidv4(), question_id: '', label: 'Feature 1', value: 'f1', order_index: 0 },
+          { id: uuidv4(), question_id: '', label: 'Feature 2', value: 'f2', order_index: 1 }
+        ];
       }
 
       let question_text = '';
+      let settings: any = {};
+
       if (type === 'nps') {
         question_text = 'How likely are you to recommend us to a friend or colleague?';
+      } else if (type === 'matrix') {
+        settings = {
+          rows: ['Row 1', 'Row 2']
+        };
+      } else if (type === 'slider') {
+        settings = {
+          min: 0,
+          max: 100,
+          step: 1,
+          leftLabel: 'Min',
+          rightLabel: 'Max'
+        };
+      } else if (type === 'multiple_textboxes') {
+        settings = {
+          labels: ['Label 1', 'Label 2']
+        };
       }
 
       const newQuestion: Question = {
@@ -40,6 +73,7 @@ export function useSurveyBuilder(initialQuestions: Question[] = []) {
         is_required: false,
         order_index: prev.length,
         choices,
+        settings,
       };
       return [...prev, newQuestion];
     });

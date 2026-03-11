@@ -23,13 +23,13 @@ export async function submitResponse(surveyId: string, answers: Record<string, u
 
   // 2. Insert Answers
   const answersToInsert = Object.entries(answers).map(([questionId, value]) => {
-    // Handle array values (like checkboxes)
-    const isArray = Array.isArray(value);
+    // Handle complex values (arrays or objects)
+    const isComplex = typeof value === 'object' && value !== null;
     return {
       response_id: response.id,
       question_id: questionId,
-      value: isArray ? null : String(value),
-      selected_choices: isArray ? value : null,
+      value: isComplex ? null : String(value),
+      selected_choices: isComplex ? value : null,
     };
   });
 

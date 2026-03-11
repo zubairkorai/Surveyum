@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Survey, Question, Choice } from '@/types';
 import { submitResponse } from '@/app/s/[surveyId]/actions';
 import { toast } from 'sonner';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Loader2, GripVertical, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SurveyResponseFormProps {
@@ -12,7 +12,7 @@ interface SurveyResponseFormProps {
   questions: (Question & { choices: Choice[] })[];
 }
 
-type AnswerValue = string | number | string[] | null;
+type AnswerValue = string | number | string[] | any;
 
 export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProps) {
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
@@ -27,6 +27,13 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
 
   const handleInputChange = (questionId: string, value: AnswerValue) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleMatrixChange = (questionId: string, row: string, columnValue: string) => {
+    setAnswers(prev => {
+      const current = (prev[questionId] as Record<string, string>) || {};
+      return { ...prev, [questionId]: { ...current, [row]: columnValue } };
+    });
   };
 
   const handleCheckboxChange = (questionId: string, choiceValue: string, checked: boolean) => {
@@ -188,6 +195,189 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                     <input type="radio" name={q.id} required={q.is_required} className="sr-only" onChange={() => handleInputChange(q.id, num)} />
                     <div className={cn("w-12 h-12 flex items-center justify-center rounded-xl border-2 transition-all duration-200 text-lg font-bold shadow-sm", answers[q.id] === num ? 'bg-blue-600 border-blue-600 text-white shadow-sm' : 'bg-white border-gray-100 text-gray-400 hover:border-gray-300')}>
                       {num}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {q.question_type === 'matrix' && (
+              <div className="overflow-x-auto -mx-6 px-6">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="p-3 bg-gray-50 border border-gray-100 min-w-[150px]"></th>
+                      {q.choices.map(c => (
+                        <th key={c.id} className="p-3 bg-gray-50 border border-gray-100 text-[10px] font-black uppercase tracking-wider text-gray-400">
+                          {c.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {q.settings?.rows?.map((row: string, rIdx: number) => (
+                      <tr key={rIdx}>
+                        <td className="p-3 border border-gray-100 text-sm font-semibold text-gray-700 bg-white">
+                          {row}
+                        </td>
+                        {q.choices.map(c => (
+                          <td key={c.id} className="p-3 border border-gray-100 text-center bg-white">
+                            <label className="flex items-center justify-center cursor-pointer">
+                              <input 
+                                type="radio" 
+                                name={`${q.id}-${rIdx}`} 
+                                className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+                                onChange={() => handleMatrixChange(q.id, row, c.value)}
+                                checked={answers[q.id]?.[row] === c.value}
+                              />
+                            </label>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {q.question_type === 'best_worst' && (
+              <div className="overflow-x-auto -mx-6 px-6">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="p-3 bg-gray-50 border border-gray-100 text-[10px] font-black uppercase text-red-500">Worst</th>
+                      <th className="p-3 bg-gray-50 border border-gray-100 min-w-[200px] text-sm font-bold text-gray-900">Options</th>
+                      <th className="p-3 bg-gray-50 border border-gray-100 text-[10px] font-black uppercase text-green-500">Best</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {q.settings?.rows?.map((row: string, rIdx: number) => (
+                      <tr key={rIdx}>
+                        <td className="p-3 border border-gray-100 text-center bg-white">
+                          <input 
+                            type="radio" 
+                            name={`${q.id}-worst`}
+                            className="w-5 h-5 text-red-600 border-gray-300 focus:ring-red-500"
+                            onChange={() => handleMatrixChange(q.id, 'worst', row)}
+                            checked={answers[q.id]?.worst === row}
+                            disabled={answers[q.id]?.best === row}
+                          />
+                        </td>
+                        <td className="p-3 border border-gray-100 text-sm font-semibold text-gray-700 text-center bg-white">
+                          {row}
+                        </td>
+                        <td className="p-3 border border-gray-100 text-center bg-white">
+                          <input 
+                            type="radio" 
+                            name={`${q.id}-best`}
+                            className="w-5 h-5 text-green-600 border-gray-300 focus:ring-green-500"
+                            onChange={() => handleMatrixChange(q.id, 'best', row)}
+                            checked={answers[q.id]?.best === row}
+                            disabled={answers[q.id]?.worst === row}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {q.question_type === 'slider' && (
+              <div className="px-2 py-8">
+                <div className="flex justify-between mb-6 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                  <span>{q.settings?.leftLabel}</span>
+                  <span className="text-blue-600 text-lg">{answers[q.id] ?? q.settings?.min ?? 0}</span>
+                  <span>{q.settings?.rightLabel}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={q.settings?.min ?? 0}
+                  max={q.settings?.max ?? 100}
+                  step={q.settings?.step ?? 1}
+                  value={answers[q.id] ?? q.settings?.min ?? 0}
+                  onChange={(e) => handleInputChange(q.id, parseInt(e.target.value))}
+                  className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                />
+              </div>
+            )}
+
+            {q.question_type === 'ranking' && (
+              <div className="flex flex-col gap-3">
+                {q.choices.map((c, idx) => {
+                  const currentRanking = (answers[q.id] as string[]) || [];
+                  const rankIndex = currentRanking.indexOf(c.value);
+                  return (
+                    <div key={c.id} className="flex items-center gap-4 p-4 bg-white border-2 border-gray-100 rounded-xl hover:border-blue-200 transition-all">
+                      <select 
+                        className="bg-gray-50 border-none rounded-lg text-xs font-black p-2 focus:ring-0"
+                        value={rankIndex + 1 || ''}
+                        onChange={(e) => {
+                          const newRank = parseInt(e.target.value);
+                          let newRanking = [...currentRanking].filter(v => v !== c.value);
+                          if (newRank) {
+                            newRanking.splice(newRank - 1, 0, c.value);
+                          }
+                          handleInputChange(q.id, newRanking);
+                        }}
+                      >
+                        <option value="">Rank...</option>
+                        {q.choices.map((_, i) => (
+                          <option key={i} value={i + 1}>{i + 1}</option>
+                        ))}
+                      </select>
+                      <span className="text-sm font-semibold text-gray-700">{c.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {q.question_type === 'multiple_textboxes' && (
+              <div className="flex flex-col gap-6">
+                {q.settings?.labels?.map((label: string, lIdx: number) => (
+                  <div key={lIdx} className="flex flex-col gap-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">{label || `Option ${lIdx + 1}`}</label>
+                    <input 
+                      type="text" 
+                      className="w-full text-base bg-white border-b-2 border-gray-100 focus:border-blue-600 focus:ring-0 text-gray-900 py-2 outline-none transition-all"
+                      onChange={(e) => {
+                        const current = (answers[q.id] as Record<string, string>) || {};
+                        handleInputChange(q.id, { ...current, [label]: e.target.value });
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {q.question_type === 'image_choice' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {q.choices.map((c) => (
+                  <label key={c.id} className={cn(
+                    "relative flex flex-col gap-0 cursor-pointer rounded-2xl border-2 transition-all duration-200 overflow-hidden group",
+                    answers[q.id] === c.value ? "border-blue-600 shadow-lg" : "border-gray-100 hover:border-gray-200"
+                  )}>
+                    <input type="radio" name={q.id} required={q.is_required} className="sr-only" onChange={() => handleInputChange(q.id, c.value)} />
+                    <div className="aspect-[4/3] bg-gray-50 relative flex items-center justify-center overflow-hidden">
+                      {c.image_url ? (
+                        <img src={c.image_url} alt={c.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-gray-300">
+                          <ImageIcon className="w-8 h-8 opacity-50" />
+                          <span className="text-[10px] font-bold uppercase tracking-widest">No Image</span>
+                        </div>
+                      )}
+                      {answers[q.id] === c.value && (
+                        <div className="absolute top-3 right-3 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-sm">
+                          <Check className="w-4 h-4" strokeWidth={4} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4 bg-white">
+                      <span className={cn("text-sm font-bold transition-colors", answers[q.id] === c.value ? "text-blue-600" : "text-gray-900")}>
+                        {c.label || 'Untitled Option'}
+                      </span>
                     </div>
                   </label>
                 ))}

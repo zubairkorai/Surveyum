@@ -20,7 +20,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useSurveyBuilder } from '@/hooks/use-survey-builder';
 import { SortableQuestion } from './SortableQuestion';
 import { QuestionType, Survey, Question, Choice } from '@/types';
-import { Type, CheckSquare, List, ChevronDown, Calendar, Star, Save, Eye, Loader2, X, Mail, CheckCircle2, BarChart, Zap } from 'lucide-react';
+import { Type, CheckSquare, List, ChevronDown, Calendar, Star, Save, Eye, Loader2, X, Mail, CheckCircle2, BarChart, Zap, Grid, ArrowUpDown, Sliders, Layout, Image, ListOrdered } from 'lucide-react';
 import { saveSurvey } from '@/app/(dashboard)/surveys/actions';
 import { toast } from 'sonner';
 import { SurveyResponseForm } from '../SurveyResponseForm';
@@ -89,6 +89,12 @@ export function SurveyEditor({ initialSurvey, initialQuestions }: SurveyEditorPr
     { type: 'rating', label: 'Rate', icon: <Star className="w-4 h-4" /> },
     { type: 'likert_scale', label: 'Scale', icon: <BarChart className="w-4 h-4" /> },
     { type: 'nps', label: 'NPS', icon: <Zap className="w-4 h-4" /> },
+    { type: 'matrix', label: 'Matrix', icon: <Grid className="w-4 h-4" /> },
+    { type: 'best_worst', label: 'B/W Scale', icon: <ArrowUpDown className="w-4 h-4" /> },
+    { type: 'ranking', label: 'Ranking', icon: <ListOrdered className="w-4 h-4" /> },
+    { type: 'slider', label: 'Slider', icon: <Sliders className="w-4 h-4" /> },
+    { type: 'multiple_textboxes', label: 'Textboxes', icon: <Layout className="w-4 h-4" /> },
+    { type: 'image_choice', label: 'Image', icon: <Image className="w-4 h-4" /> },
     { type: 'date', label: 'Date', icon: <Calendar className="w-4 h-4" /> },
   ];
 
