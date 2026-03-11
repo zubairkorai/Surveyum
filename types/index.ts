@@ -27,7 +27,13 @@ export type QuestionType =
   | 'likert_scale'
   | 'yes_no'
   | 'email'
-  | 'nps';
+  | 'nps'
+  | 'matrix'
+  | 'best_worst'
+  | 'ranking'
+  | 'slider'
+  | 'multiple_textboxes'
+  | 'image_choice';
 
 export type Question = {
   id: string;
@@ -36,7 +42,7 @@ export type Question = {
   question_type: QuestionType;
   is_required: boolean;
   order_index: number;
-  settings?: any; // JSONB
+  settings?: any; // JSONB (e.g., matrix rows, slider min/max)
   created_at?: string;
   choices?: Choice[]; // joined
 };
@@ -47,6 +53,7 @@ export type Choice = {
   label: string;
   value: string;
   order_index: number;
+  image_url?: string; // For image_choice
 };
 
 export type ResponseStatus = 'in_progress' | 'completed';
@@ -67,4 +74,5 @@ export type Answer = {
   value: string | null;
   selected_choices: string[] | null; // JSONB array of values
   created_at?: string;
+  matrix_answers?: any; // For matrix questions
 };

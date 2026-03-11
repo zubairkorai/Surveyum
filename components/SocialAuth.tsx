@@ -13,23 +13,23 @@ export function SocialAuth() {
   };
 
   return (
-    <div className="flex flex-col gap-3 w-full mt-6">
-      <div className="relative flex items-center gap-4 my-2">
-        <div className="flex-1 h-px bg-gray-100" />
-        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Or continue with</span>
-        <div className="flex-1 h-px bg-gray-100" />
+    <div className="flex flex-col gap-4 w-full mt-6">
+      <div className="relative flex items-center gap-4">
+        <div className="flex-1 h-px bg-gray-200" />
+        <span className="text-xs text-gray-400 font-medium">or</span>
+        <div className="flex-1 h-px bg-gray-200" />
       </div>
 
       <button
         type="button"
         onClick={() => handleSocialSignIn('google')}
         disabled={isGoogleLoading}
-        className="flex items-center justify-center gap-3 px-4 py-3.5 bg-white border border-gray-100 rounded-xl hover:bg-gray-50 transition-all font-bold text-sm text-gray-700 shadow-sm"
+        className="flex items-center justify-center gap-3 px-4 py-2.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all font-medium text-sm text-gray-700 shadow-sm active:scale-[0.99]"
       >
         {isGoogleLoading ? (
-          <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+          <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
         ) : (
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
               fill="#EA4335"
               d="M12 5.04c1.9 0 3.61.65 4.95 1.93l3.71-3.71C18.41 1.24 15.42 0 12 0 7.31 0 3.31 2.69 1.34 6.64l4.33 3.36c1.02-3.06 3.88-5.32 6.33-5.32z"

@@ -59,7 +59,9 @@ export async function proxy(request: NextRequest) {
   // Protected routes: everything under (dashboard)
   // For simplicity in this demo, we check if the path is NOT login/register/public-survey
   const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
-                     request.nextUrl.pathname.startsWith('/register');
+                     request.nextUrl.pathname.startsWith('/register') ||
+                     request.nextUrl.pathname.startsWith('/forgot-password') ||
+                     request.nextUrl.pathname.startsWith('/reset-password');
   const isPublicSurvey = request.nextUrl.pathname.startsWith('/s/');
 
   if (!user && !isAuthPage && !isPublicSurvey && request.nextUrl.pathname !== '/') {
