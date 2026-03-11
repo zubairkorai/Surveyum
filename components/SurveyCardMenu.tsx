@@ -68,26 +68,41 @@ export function SurveyCardMenu({ surveyId, isPublished }: SurveyCardMenuProps) {
   return (
     <div className="relative" ref={menuRef}>
       <button 
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         disabled={isLoading}
-        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
+        className="p-3 -m-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all relative z-[60]"
+        aria-label="Survey options"
       >
         {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MoreVertical className="w-5 h-5" />}
       </button>
 
+      {/* Mobile Overlay */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl shadow-gray-200/50 z-50 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+        <div 
+          className="fixed inset-0 bg-black/5 z-50 md:hidden animate-in fade-in duration-200"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {isOpen && (
+        <div className={cn(
+          "absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl shadow-gray-200/50 z-[60] py-1.5 animate-in fade-in zoom-in-95 duration-100 origin-top-right",
+          "md:absolute fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-auto md:left-auto md:translate-x-0 md:translate-y-0 w-[240px] md:w-56"
+        )}>
           <button 
-            onClick={copyLink}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+            onClick={(e) => { e.stopPropagation(); copyLink(); }}
+            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
           >
             <LinkIcon className="w-4 h-4 text-blue-500" />
             Copy Link
           </button>
           
           <button 
-            onClick={handleTogglePublish}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+            onClick={(e) => { e.stopPropagation(); handleTogglePublish(); }}
+            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
           >
             {isPublished ? (
               <>
@@ -105,8 +120,8 @@ export function SurveyCardMenu({ surveyId, isPublished }: SurveyCardMenuProps) {
           <div className="h-px bg-gray-100 my-1 mx-2" />
 
           <button 
-            onClick={handleDelete}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"
+            onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             Delete Survey

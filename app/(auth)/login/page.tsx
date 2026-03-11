@@ -23,10 +23,10 @@ export default async function LoginPage({
       </div>
 
       <div className="w-full">
-        <div className="flex flex-col mb-8 items-center sm:items-start">
+        <div className="flex flex-col mb-8 items-center">
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-lg font-bold mb-6 shadow-sm shadow-blue-100">S</div>
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight text-center sm:text-left">Sign in to your account</h1>
-          <p className="text-gray-500 text-sm mt-1.5 text-center sm:text-left">Enter your email and password to access your dashboard.</p>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight text-center">Sign in to your account</h1>
+          <p className="text-gray-500 text-sm mt-1.5 text-center">Enter your email and password to access your dashboard.</p>
         </div>
 
         <form className="flex flex-col w-full gap-5" action={login}>
