@@ -7,7 +7,10 @@ import { headers } from 'next/headers';
 
 export async function signInWithSocial(provider: 'google') {
   const supabase = await createClient();
-  const origin = (await headers()).get('origin');
+  const headerList = await headers();
+  const host = headerList.get('host');
+  const protocol = headerList.get('x-forwarded-proto') || 'http';
+  const origin = `${protocol}://${host}`;
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
@@ -79,7 +82,10 @@ export async function signOut() {
 export async function resetPassword(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get('email') as string;
-  const origin = (await headers()).get('origin');
+  const headerList = await headers();
+  const host = headerList.get('host');
+  const protocol = headerList.get('x-forwarded-proto') || 'http';
+  const origin = `${protocol}://${host}`;
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=/reset-password`,
