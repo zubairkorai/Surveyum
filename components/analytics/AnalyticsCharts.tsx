@@ -6,6 +6,8 @@ import {
   PieChart, Pie, Cell, Legend 
 } from 'recharts';
 
+import { useTheme } from '../ThemeProvider';
+
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 interface ChartDataPoint {
@@ -20,13 +22,28 @@ interface ChartProps {
 
 export function AnalyticsChart({ data, type }: ChartProps) {
   const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <div className="h-[300px] w-full bg-gray-50 animate-pulse rounded-xl" />;
-  if (!data || data.length === 0) return <div className="text-gray-400 text-sm italic">No data available</div>;
+  if (!mounted) return <div className="h-[300px] w-full bg-gray-50 dark:bg-gray-800/50 animate-pulse rounded-xl" />;
+  if (!data || data.length === 0) return <div className="text-gray-400 dark:text-gray-600 text-sm italic">No data available</div>;
+
+  const tooltipStyle = {
+    borderRadius: '12px',
+    border: 'none',
+    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    backgroundColor: isDark ? '#1f2937' : '#ffffff',
+    color: isDark ? '#f3f4f6' : '#111827',
+  };
+
+  const tickStyle = {
+    fontSize: 12,
+    fill: isDark ? '#9ca3af' : '#6b7280',
+  };
 
   return (
     <div className="h-[300px] w-full mt-4">
@@ -43,22 +60,21 @@ export function AnalyticsChart({ data, type }: ChartProps) {
               dataKey="value"
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke={isDark ? '#111827' : '#fff'} />
               ))}
             </Pie>
-            <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-            />
-            <Legend />
+            <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: isDark ? '#f3f4f6' : '#111827' }} />
+            <Legend iconType="circle" />
           </PieChart>
         ) : (
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#374151' : '#f3f4f6'} />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={tickStyle} />
+            <YAxis axisLine={false} tickLine={false} tick={tickStyle} />
             <Tooltip 
-              cursor={{ fill: '#f9fafb' }}
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              cursor={{ fill: isDark ? '#374151' : '#f9fafb', opacity: 0.4 }}
+              contentStyle={tooltipStyle}
+              itemStyle={{ color: isDark ? '#f3f4f6' : '#111827' }}
             />
             <Bar dataKey="value" fill="#3b82f6" radius={[6, 6, 0, 0]} barSize={40} />
           </BarChart>

@@ -6,30 +6,36 @@ import { revalidatePath } from 'next/cache';
 export async function submitResponse(surveyId: string, answers: Record<string, unknown>) {
   const supabase = await createClient();
   
-  // Get user session safely without throwing if not logged in
-  const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
+  // Safely get user - don't let this fail the whole action
+  let userId: string | null = null;
+  try {
+    const { data: authData } = await supabase.auth.getUser();
+    userId = authData?.user?.id || null;
+  } catch (e) {
+    // Guest user
+  }
 
   try {
     // 1. Create a Response record
+    // We MUST be able to select the ID back to save answers
     const { data: response, error: responseError } = await supabase
       .from('responses')
       .insert({
         survey_id: surveyId,
-        respondent_id: user?.id || null,
+        respondent_id: userId,
         status: 'completed',
         completed_at: new Date().toISOString(),
       })
-      .select()
+      .select('id')
       .single();
 
     if (responseError) {
-      console.error('Response insert error:', responseError);
-      throw new Error('Failed to create response record');
+      console.error('Submission Error (Response):', responseError);
+      return { success: false, error: `Database Error: ${responseError.message}. Check RLS policies for 'responses' table.` };
     }
 
-    // 2. Prepare Answers for insertion
+    // 2. Prepare Answers
     const answersToInsert = Object.entries(answers).map(([questionId, value]) => {
-      // Handle complex values (arrays or objects)
       const isComplex = typeof value === 'object' && value !== null;
       return {
         response_id: response.id,
@@ -45,17 +51,13 @@ export async function submitResponse(surveyId: string, answers: Record<string, u
         .insert(answersToInsert);
 
       if (answersError) {
-        console.error('Answers insert error:', answersError);
-        throw new Error('Failed to save survey answers');
+        console.error('Submission Error (Answers):', answersError);
+        return { success: false, error: `Failed to save answers: ${answersError.message}. Check RLS for 'answers' table.` };
       }
     }
 
     return { success: true };
   } catch (error: any) {
-    console.error('Submission error details:', error);
-    return { 
-      success: false, 
-      error: error.message || 'An unexpected error occurred during submission' 
-    };
+    return { success: false, error: error.message || 'An unexpected error occurred' };
   }
 }

@@ -9,6 +9,7 @@ export async function saveSurvey(data: {
   id?: string;
   title: string;
   description?: string;
+  theme_id?: string;
   questions: Question[];
 }) {
   const supabase = await createClient();
@@ -25,6 +26,7 @@ export async function saveSurvey(data: {
       .update({
         title: data.title,
         description: data.description,
+        theme_id: data.theme_id || 'minimal',
         updated_at: new Date().toISOString(),
       })
       .eq('id', surveyId)
@@ -37,6 +39,7 @@ export async function saveSurvey(data: {
       .insert({
         title: data.title,
         description: data.description,
+        theme_id: data.theme_id || 'minimal',
         user_id: user.id,
       })
       .select()

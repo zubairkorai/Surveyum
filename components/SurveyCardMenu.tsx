@@ -89,12 +89,12 @@ export function SurveyCardMenu({ surveyId, isPublished }: SurveyCardMenuProps) {
 
       {isOpen && (
         <div className={cn(
-          "absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl shadow-gray-200/50 z-[60] py-1.5 animate-in fade-in zoom-in-95 duration-100 origin-top-right",
+          "absolute right-0 mt-2 w-56 bg-white dark:bg-[#1F2937] border border-gray-100 dark:border-gray-700 rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-none z-[60] py-1.5 animate-in fade-in zoom-in-95 duration-100 origin-top-right",
           "md:absolute fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-auto md:left-auto md:translate-x-0 md:translate-y-0 w-[240px] md:w-56"
         )}>
           <button 
             onClick={(e) => { e.stopPropagation(); copyLink(); }}
-            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
           >
             <LinkIcon className="w-4 h-4 text-blue-500" />
             Copy Link
@@ -102,7 +102,7 @@ export function SurveyCardMenu({ surveyId, isPublished }: SurveyCardMenuProps) {
           
           <button 
             onClick={(e) => { e.stopPropagation(); handleTogglePublish(); }}
-            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
           >
             {isPublished ? (
               <>
@@ -117,11 +117,11 @@ export function SurveyCardMenu({ surveyId, isPublished }: SurveyCardMenuProps) {
             )}
           </button>
 
-          <div className="h-px bg-gray-100 my-1 mx-2" />
+          <div className="h-px bg-gray-100 dark:bg-gray-700 my-1 mx-2" />
 
           <button 
             onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+            className="flex items-center gap-3 w-full px-4 py-3 md:py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             Delete Survey

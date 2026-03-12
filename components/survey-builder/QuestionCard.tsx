@@ -54,11 +54,11 @@ export function QuestionCard({
   };
 
   return (
-    <div className="bg-white border rounded-3xl p-8 shadow-sm group relative hover:border-blue-300 transition-all text-gray-900">
+    <div className="bg-white dark:bg-[#111827] border dark:border-gray-800 rounded-3xl p-8 shadow-sm group relative hover:border-blue-300 dark:hover:border-blue-500 transition-all text-gray-900 dark:text-gray-100">
       {/* Drag Handle */}
       <div 
         {...dragHandleProps} 
-        className="absolute left-3 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-500 transition-colors"
+        className="absolute left-3 top-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing text-gray-300 dark:text-gray-600 hover:text-blue-500 transition-colors"
       >
         <GripVertical className="w-6 h-6" />
       </div>
@@ -66,25 +66,25 @@ export function QuestionCard({
       <div className="flex flex-col gap-6 ml-6">
         {/* Header: Type and Required Toggle */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
-            <span className="p-1.5 bg-gray-50 rounded-lg text-gray-400">
+          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
+            <span className="p-1.5 bg-gray-50 dark:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500">
               {getIcon()}
             </span>
             {question.question_type.replace('_', ' ')}
           </div>
           <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2 text-xs font-bold text-gray-500 cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={question.is_required}
                 onChange={(e) => updateQuestion(question.id, { is_required: e.target.checked })}
-                className="w-4 h-4 rounded-md border-gray-200 text-blue-600 focus:ring-blue-500"
+                className="w-4 h-4 rounded-md border-gray-200 dark:border-gray-700 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-800"
               />
               Required
             </label>
             <button
               onClick={() => removeQuestion(question.id)}
-              className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+              className="p-2 text-gray-300 dark:text-gray-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -100,10 +100,10 @@ export function QuestionCard({
             placeholder="Write your question here..."
             className={cn(
               "text-xl font-bold border-none focus:ring-0 w-full p-0 bg-transparent outline-none transition-all",
-              question.question_text === '' ? "text-gray-300" : "text-gray-900"
+              question.question_text === '' ? "text-gray-300 dark:text-gray-700" : "text-gray-900 dark:text-gray-100"
             )}
           />
-          <div className="absolute bottom-[-4px] left-0 w-full h-0.5 bg-gray-50 group-focus-within/input:bg-blue-600 transition-colors" />
+          <div className="absolute bottom-[-4px] left-0 w-full h-0.5 bg-gray-50 dark:bg-gray-800 group-focus-within/input:bg-blue-600 transition-colors" />
         </div>
 
         {/* Choices (if applicable) */}
@@ -112,7 +112,7 @@ export function QuestionCard({
             {question.choices?.map((choice, idx) => (
               <div key={choice.id} className="flex items-center gap-3 group/choice">
                 <div className={cn(
-                  "w-5 h-5 border-2 border-gray-100 shrink-0",
+                  "w-5 h-5 border-2 border-gray-100 dark:border-gray-800 shrink-0",
                   question.question_type === 'checkbox' ? "rounded-md" : "rounded-full"
                 )} />
                 <div className="flex-1 flex flex-col gap-2">
@@ -122,7 +122,7 @@ export function QuestionCard({
                     onChange={(e) => updateChoice(question.id, choice.id, e.target.value)}
                     className={cn(
                       "text-sm font-semibold border-none focus:ring-0 p-1.5 outline-none rounded-lg transition-all",
-                      choice.label === '' ? "text-gray-300 italic" : "text-gray-700 bg-gray-50"
+                      choice.label === '' ? "text-gray-300 dark:text-gray-700 italic" : "text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50"
                     )}
                     placeholder={
                       question.question_type === 'yes_no' ? (idx === 0 ? "Yes" : "No") : 
@@ -132,7 +132,7 @@ export function QuestionCard({
                   />
                   {question.question_type === 'image_choice' && (
                     <div className="flex items-center gap-2 px-1.5">
-                      <Image className="w-3 h-3 text-gray-400" />
+                      <Image className="w-3 h-3 text-gray-400 dark:text-gray-600" />
                       <input
                         type="text"
                         value={choice.image_url || ''}
@@ -143,7 +143,7 @@ export function QuestionCard({
                           updateQuestion(question.id, { choices: updatedChoices });
                         }}
                         placeholder="Image URL (optional)"
-                        className="text-[10px] font-bold text-gray-400 bg-transparent border-none focus:ring-0 p-0 flex-1"
+                        className="text-[10px] font-bold text-gray-400 dark:text-gray-600 bg-transparent border-none focus:ring-0 p-0 flex-1"
                       />
                     </div>
                   )}
@@ -152,7 +152,7 @@ export function QuestionCard({
                 {question.question_type !== 'yes_no' && (
                   <button
                     onClick={() => removeChoice(question.id, choice.id)}
-                    className="p-1.5 text-gray-300 hover:text-red-500 opacity-0 group-hover/choice:opacity-100 transition-all hover:bg-red-50 rounded-lg"
+                    className="p-1.5 text-gray-300 dark:text-gray-600 hover:text-red-500 opacity-0 group-hover/choice:opacity-100 transition-all hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -163,7 +163,7 @@ export function QuestionCard({
             {!['yes_no', 'likert_scale'].includes(question.question_type) && (
               <button
                 onClick={() => addChoice(question.id)}
-                className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 mt-4 transition-colors"
+                className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-4 transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Add Option
@@ -177,12 +177,12 @@ export function QuestionCard({
           <div className="mt-4">
             <div className="flex gap-1 mb-2 overflow-x-auto no-scrollbar">
               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
-                <div key={i} className="flex-1 min-w-[30px] h-10 border-2 border-gray-100 rounded-lg flex items-center justify-center text-gray-300 font-bold text-xs">
+                <div key={i} className="flex-1 min-w-[30px] h-10 border-2 border-gray-100 dark:border-gray-800 rounded-lg flex items-center justify-center text-gray-300 dark:text-gray-700 font-bold text-xs">
                   {i}
                 </div>
               ))}
             </div>
-            <div className="flex justify-between text-[10px] font-black text-gray-400 uppercase tracking-tighter">
+            <div className="flex justify-between text-[10px] font-black text-gray-400 dark:text-gray-600 uppercase tracking-tighter">
               <span>Not likely</span>
               <span>Extremely likely</span>
             </div>
@@ -191,8 +191,8 @@ export function QuestionCard({
 
         {/* Specialized Visual Indicators */}
         {['short_text', 'long_text', 'email'].includes(question.question_type) && (
-          <div className="mt-2 p-5 bg-gray-50 border border-dashed rounded-2xl text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-3">
-             <div className="w-2 h-2 rounded-full bg-gray-200" />
+          <div className="mt-2 p-5 bg-gray-50 dark:bg-gray-800/50 border border-dashed border-gray-200 dark:border-gray-700 rounded-2xl text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-3">
+             <div className="w-2 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
             {question.question_type === 'short_text' && 'Short text response'}
             {question.question_type === 'long_text' && 'Long text response'}
             {question.question_type === 'email' && 'Valid email address response'}
@@ -202,7 +202,7 @@ export function QuestionCard({
         {question.question_type === 'rating' && (
           <div className="flex flex-wrap gap-2 mt-2">
             {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="w-10 h-10 border-2 border-gray-100 rounded-xl flex items-center justify-center text-gray-300 font-bold">
+              <div key={i} className="w-10 h-10 border-2 border-gray-100 dark:border-gray-800 rounded-xl flex items-center justify-center text-gray-300 dark:text-gray-700 font-bold">
                 {i}
               </div>
             ))}
@@ -211,43 +211,43 @@ export function QuestionCard({
 
         {/* Slider Visual */}
         {question.question_type === 'slider' && (
-          <div className="mt-4 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+          <div className="mt-4 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
             <div className="flex justify-between mb-4">
               <input 
                 type="text" 
                 value={question.settings?.leftLabel || ''} 
                 onChange={(e) => updateSettings({ leftLabel: e.target.value })}
                 placeholder="Min Label (e.g. Low)"
-                className="text-[10px] font-black uppercase tracking-widest text-gray-400 bg-transparent border-none focus:ring-0 p-0 w-1/3"
+                className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 bg-transparent border-none focus:ring-0 p-0 w-1/3"
               />
               <input 
                 type="text" 
                 value={question.settings?.rightLabel || ''} 
                 onChange={(e) => updateSettings({ rightLabel: e.target.value })}
                 placeholder="Max Label (e.g. High)"
-                className="text-[10px] font-black uppercase tracking-widest text-gray-400 bg-transparent border-none focus:ring-0 p-0 w-1/3 text-right"
+                className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 bg-transparent border-none focus:ring-0 p-0 w-1/3 text-right"
               />
             </div>
-            <div className="relative h-2 bg-gray-200 rounded-full">
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-blue-600 rounded-full shadow-md" />
+            <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-gray-800 border-4 border-blue-600 rounded-full shadow-md" />
             </div>
             <div className="flex gap-4 mt-6">
               <div className="flex-1">
-                <label className="text-[10px] font-black uppercase text-gray-400 block mb-1">Min Value</label>
+                <label className="text-[10px] font-black uppercase text-gray-400 dark:text-gray-600 block mb-1">Min Value</label>
                 <input 
                   type="number" 
                   value={question.settings?.min || 0} 
                   onChange={(e) => updateSettings({ min: parseInt(e.target.value) })}
-                  className="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-bold"
+                  className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-300"
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[10px] font-black uppercase text-gray-400 block mb-1">Max Value</label>
+                <label className="text-[10px] font-black uppercase text-gray-400 dark:text-gray-600 block mb-1">Max Value</label>
                 <input 
                   type="number" 
                   value={question.settings?.max || 100} 
                   onChange={(e) => updateSettings({ max: parseInt(e.target.value) })}
-                  className="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-bold"
+                  className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-300"
                 />
               </div>
             </div>
@@ -269,24 +269,24 @@ export function QuestionCard({
                       updateSettings({ labels: newLabels });
                     }}
                     placeholder={`Label ${idx + 1}`}
-                    className="text-xs font-black uppercase tracking-widest text-gray-500 bg-transparent border-none focus:ring-0 p-0"
+                    className="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 bg-transparent border-none focus:ring-0 p-0"
                   />
                   <button 
                     onClick={() => {
                       const newLabels = (question.settings?.labels || []).filter((_: any, i: number) => i !== idx);
                       updateSettings({ labels: newLabels });
                     }}
-                    className="opacity-0 group-hover/row:opacity-100 text-gray-300 hover:text-red-500 transition-all"
+                    className="opacity-0 group-hover/row:opacity-100 text-gray-300 dark:text-gray-600 hover:text-red-500 transition-all"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>
                 </div>
-                <div className="h-10 border-2 border-gray-50 bg-gray-50/30 rounded-xl" />
+                <div className="h-10 border-2 border-gray-50 dark:border-gray-800 bg-gray-50/30 dark:bg-gray-800/30 rounded-xl" />
               </div>
             ))}
             <button
               onClick={() => updateSettings({ labels: [...(question.settings?.labels || []), ''] })}
-              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 mt-2 transition-colors"
+              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-2 transition-colors"
             >
               <Plus className="w-3 h-3" />
               Add Textbox
@@ -296,8 +296,8 @@ export function QuestionCard({
 
         {/* Matrix Rows (for Matrix and Best-Worst) */}
         {(question.question_type === 'matrix' || question.question_type === 'best_worst') && (
-          <div className="mt-4 p-6 bg-gray-50 rounded-2xl border border-gray-100">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2">
+          <div className="mt-4 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-4 flex items-center gap-2">
               <Grid className="w-3 h-3" />
               Rows / Items
             </h4>
@@ -313,14 +313,14 @@ export function QuestionCard({
                       updateSettings({ rows: newRows });
                     }}
                     placeholder={`Row ${idx + 1}`}
-                    className="flex-1 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500/20 outline-none"
+                    className="flex-1 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500/20 outline-none"
                   />
                   <button 
                     onClick={() => {
                       const newRows = (question.settings?.rows || []).filter((_: any, i: number) => i !== idx);
                       updateSettings({ rows: newRows });
                     }}
-                    className="opacity-0 group-hover/row:opacity-100 text-gray-300 hover:text-red-500 transition-all"
+                    className="opacity-0 group-hover/row:opacity-100 text-gray-300 dark:text-gray-600 hover:text-red-500 transition-all"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -328,7 +328,7 @@ export function QuestionCard({
               ))}
               <button
                 onClick={() => updateSettings({ rows: [...(question.settings?.rows || []), ''] })}
-                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 mt-2 transition-colors"
+                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-2 transition-colors"
               >
                 <Plus className="w-3 h-3" />
                 Add Row
@@ -340,7 +340,7 @@ export function QuestionCard({
         {/* Ranking Visual */}
         {question.question_type === 'ranking' && (
           <div className="mt-2 flex flex-col gap-2">
-             <div className="flex items-center gap-2 text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg w-fit mb-2">
+             <div className="flex items-center gap-2 text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-3 py-1.5 rounded-lg w-fit mb-2">
                 <Info className="w-3 h-3" />
                 Respondents will drag these to rank them
              </div>
@@ -350,7 +350,7 @@ export function QuestionCard({
         {/* Image Choice Visual Info */}
         {question.question_type === 'image_choice' && (
           <div className="mt-2">
-             <div className="flex items-center gap-2 text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg w-fit mb-2">
+             <div className="flex items-center gap-2 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-lg w-fit mb-2">
                 <Image className="w-3 h-3" />
                 Add images to your options below
              </div>
@@ -361,10 +361,10 @@ export function QuestionCard({
           <div className="relative max-w-[200px]">
              <input 
               type="date" 
-              className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-300 cursor-not-allowed pointer-events-none"
+              className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-300 dark:text-gray-700 cursor-not-allowed pointer-events-none"
               disabled
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-700">
                <Calendar className="w-4 h-4" />
             </div>
           </div>

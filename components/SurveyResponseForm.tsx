@@ -6,6 +6,7 @@ import { submitResponse } from '@/app/s/[surveyId]/actions';
 import { toast } from 'sonner';
 import { Check, Loader2, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SURVEY_THEMES, ThemeId } from '@/lib/themes';
 
 interface SurveyResponseFormProps {
   survey: Survey;
@@ -18,6 +19,9 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Get theme configuration
+  const theme = SURVEY_THEMES[(survey.theme_id as ThemeId) || 'minimal'];
 
   const progress = useMemo(() => {
     if (questions.length === 0) return 0;
@@ -77,19 +81,19 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
 
   if (isSubmitted) {
     return (
-      <div className="flex-1 flex items-center justify-center p-6 md:p-12">
-        <div className="max-w-lg w-full bg-white rounded-[32px] p-12 text-center shadow-xl shadow-blue-500/5 animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 transition-transform hover:rotate-0">
+      <div className={cn("flex-1 flex items-center justify-center p-6 md:p-12 transition-colors duration-500", theme.colors.background, theme.styles.fontFamily)}>
+        <div className={cn("max-w-lg w-full p-12 text-center shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700", theme.colors.card, theme.styles.cardRadius)}>
+          <div className={cn("w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 transition-transform hover:rotate-0", theme.colors.primary, "bg-opacity-10", theme.colors.accent.replace('text-', 'text-'))}>
             <Check className="w-10 h-10" strokeWidth={3} />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3 tracking-tight">Submission Received</h1>
-          <p className="text-gray-500 text-lg font-medium leading-relaxed mb-10">
+          <h1 className={cn("text-3xl font-bold mb-3 tracking-tight", theme.colors.text)}>Submission Received</h1>
+          <p className={cn("text-lg font-medium leading-relaxed mb-10", theme.colors.muted)}>
             Thank you for your valuable feedback. Your responses have been securely recorded.
           </p>
           <div className="flex flex-col gap-3">
             <button 
               onClick={() => window.location.reload()} 
-              className="w-full px-8 py-4 bg-gray-900 text-white text-base font-bold rounded-2xl hover:bg-black transition-all shadow-lg active:scale-[0.98]"
+              className={cn("w-full px-8 py-4 text-white text-base font-bold transition-all shadow-lg active:scale-[0.98]", theme.colors.primary, theme.styles.buttonRadius)}
             >
               Submit another response
             </button>
@@ -101,27 +105,27 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center">
-      {/* Subtle Fixed Progress */}
-      <div className="fixed top-0 left-0 w-full h-1.5 bg-gray-100 z-[100] overflow-hidden">
+    <div className={cn("flex-1 flex flex-col items-center transition-colors duration-500", theme.colors.background, theme.styles.fontFamily)}>
+      {/* Fixed Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1.5 bg-black/5 z-[100] overflow-hidden">
         <div 
-          className="h-full bg-blue-600 transition-all duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]" 
+          className={cn("h-full transition-all duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]", theme.colors.primary)} 
           style={{ width: `${progress}%` }} 
         />
       </div>
 
       <div className="w-full max-w-[800px] px-4 md:px-8 py-12 md:py-24">
         {/* Survey Header Card */}
-        <div className="bg-white rounded-[32px] p-8 md:p-12 shadow-sm border border-gray-100 mb-12 animate-in fade-in duration-700">
-          <div className="flex items-center gap-2 mb-6 text-blue-600">
-            <Sparkles className="w-5 h-5 fill-blue-600" />
+        <div className={cn("p-8 md:p-12 shadow-sm border border-black/5 mb-12 animate-in fade-in duration-700", theme.colors.card, theme.styles.cardRadius)}>
+          <div className={cn("flex items-center gap-2 mb-6", theme.colors.accent)}>
+            <Sparkles className="w-5 h-5 fill-current" />
             <span className="text-xs font-black uppercase tracking-[0.2em]">Official Survey</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-[1.1] mb-6">
+          <h1 className={cn("text-4xl md:text-5xl font-black tracking-tight leading-[1.1] mb-6", theme.colors.text)}>
             {survey.title || 'Untitled Survey'}
           </h1>
           {survey.description && (
-            <p className="text-gray-500 text-lg leading-relaxed font-medium whitespace-pre-wrap">{survey.description}</p>
+            <p className={cn("text-lg leading-relaxed font-medium whitespace-pre-wrap", theme.colors.muted)}>{survey.description}</p>
           )}
         </div>
 
@@ -129,26 +133,30 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
           {questions.map((q, idx) => (
             <div 
               key={q.id} 
-              className="bg-white rounded-[28px] p-8 md:p-10 shadow-sm border border-gray-100 animate-in fade-in duration-700 slide-in-from-bottom-4" 
+              className={cn("p-8 md:p-10 shadow-sm border border-black/5 animate-in fade-in duration-700 slide-in-from-bottom-4", theme.colors.card, theme.styles.cardRadius)} 
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <div className="flex items-start gap-4 mb-8">
-                <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-gray-50 text-gray-400 text-sm font-bold shrink-0">
+                <span className={cn("flex items-center justify-center w-8 h-8 rounded-xl bg-black/5 text-sm font-bold shrink-0", theme.colors.muted)}>
                   {idx + 1}
                 </span>
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight pt-0.5 leading-snug">
+                <h3 className={cn("text-xl md:text-2xl font-bold tracking-tight pt-0.5 leading-snug", theme.colors.text)}>
                   {q.question_text || 'Untitled Question'}
-                  {q.is_required && <span className="text-blue-500 ml-2" title="Required">*</span>}
+                  {q.is_required && <span className={cn("ml-2", theme.colors.accent)} title="Required">*</span>}
                 </h3>
               </div>
 
-              {/* Enhanced Inputs */}
+              {/* Enhanced Inputs with Theme Styles */}
               <div className="px-0 sm:px-12">
                 {['short_text', 'email'].includes(q.question_type) && (
                   <input
                     type={q.question_type === 'email' ? 'email' : 'text'}
                     required={q.is_required}
-                    className="w-full text-xl bg-white border-b-2 border-gray-100 focus:border-blue-600 focus:ring-0 text-gray-900 py-3 outline-none transition-all placeholder:text-gray-200 font-medium"
+                    className={cn(
+                      "w-full text-xl bg-transparent border-b-2 focus:ring-0 py-3 outline-none transition-all font-medium",
+                      theme.colors.text,
+                      theme.styles.inputStyle
+                    )}
                     onChange={(e) => handleInputChange(q.id, e.target.value)}
                     placeholder={q.question_type === 'email' ? 'name@example.com' : 'Type your answer here...'}
                   />
@@ -157,24 +165,41 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                 {q.question_type === 'long_text' && (
                   <textarea
                     required={q.is_required}
-                    className="w-full text-lg bg-gray-50 border-2 border-gray-50 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-50 rounded-2xl p-6 min-h-[160px] outline-none transition-all text-gray-900 placeholder:text-gray-300 font-medium leading-relaxed"
+                    className={cn(
+                      "w-full text-lg border-2 focus:ring-4 focus:ring-opacity-10 rounded-2xl p-6 min-h-[160px] outline-none transition-all font-medium leading-relaxed",
+                      theme.styles.inputStyle,
+                      theme.colors.text
+                    )}
                     onChange={(e) => handleInputChange(q.id, e.target.value)}
                     placeholder="Tell us more about it..."
                   />
                 )}
 
                 {['multiple_choice', 'yes_no', 'likert_scale'].includes(q.question_type) && (
-                  <div className={cn("grid grid-cols-1 gap-3", q.question_type === 'likert_scale' ? "sm:grid-cols-5" : "")}>
+                  <div className={cn(
+                    "grid gap-3", 
+                    q.question_type === 'likert_scale' ? "grid-cols-1 sm:grid-cols-5" : "grid-cols-1"
+                  )}>
                     {q.choices.map((c) => (
                       <label key={c.id} className={cn(
-                        "flex items-center gap-4 cursor-pointer p-5 rounded-2xl border-2 transition-all duration-300 group select-none",
-                        answers[q.id] === c.value ? "bg-blue-50/30 border-blue-600 shadow-sm" : "bg-white border-gray-100 hover:border-gray-200"
+                        "flex items-center gap-4 cursor-pointer p-5 rounded-2xl border-2 transition-all duration-300 group select-none h-full",
+                        q.question_type === 'likert_scale' && "sm:flex-col sm:justify-center sm:text-center sm:gap-3 sm:p-4",
+                        answers[q.id] === c.value 
+                          ? cn("bg-opacity-10 border-current shadow-sm", theme.colors.accent.replace('text-', 'bg-'), theme.colors.accent)
+                          : cn("bg-white/50 dark:bg-gray-800/50 border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20", theme.colors.text)
                       )}>
                         <input type="radio" name={q.id} required={q.is_required} className="sr-only" onChange={() => handleInputChange(q.id, c.value)} />
-                        <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0", answers[q.id] === c.value ? "border-blue-600 bg-blue-600" : "border-gray-300 group-hover:border-gray-400")}>
-                          {answers[q.id] === c.value && <div className="w-2 h-2 rounded-full bg-white" />}
+                        <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0", 
+                          answers[q.id] === c.value ? "border-current bg-current" : "border-gray-300 dark:border-gray-600 group-hover:border-gray-400 dark:group-hover:border-gray-500"
+                        )}>
+                          {answers[q.id] === c.value && <div className="w-2 h-2 rounded-full bg-white dark:bg-gray-900" />}
                         </div>
-                        <span className={cn("text-base font-bold transition-colors", answers[q.id] === c.value ? "text-blue-700" : "text-gray-600")}>{c.label}</span>
+                        <span className={cn(
+                          "font-bold transition-colors leading-tight",
+                          q.question_type === 'likert_scale' ? "text-[10px] sm:text-xs uppercase tracking-wider" : "text-base"
+                        )}>
+                          {c.label}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -185,13 +210,17 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                     {q.choices.map((c) => (
                       <label key={c.id} className={cn(
                         "flex items-center gap-4 cursor-pointer p-5 rounded-2xl border-2 transition-all duration-300 group select-none",
-                        (answers[q.id] as string[])?.includes(c.value) ? "bg-blue-50/30 border-blue-600 shadow-sm" : "bg-white border-gray-100 hover:border-gray-200"
+                        (answers[q.id] as string[])?.includes(c.value)
+                          ? cn("bg-opacity-10 border-current shadow-sm", theme.colors.accent.replace('text-', 'bg-'), theme.colors.accent)
+                          : cn("bg-white/50 dark:bg-gray-800/50 border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20", theme.colors.text)
                       )}>
                         <input type="checkbox" className="sr-only" onChange={(e) => handleCheckboxChange(q.id, c.value, e.target.checked)} />
-                        <div className={cn("w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all shrink-0", (answers[q.id] as string[])?.includes(c.value) ? "bg-blue-600 border-blue-600" : "border-gray-300 group-hover:border-gray-400")}>
-                          {(answers[q.id] as string[])?.includes(c.value) && <Check className="w-4 h-4 text-white" strokeWidth={4} />}
+                        <div className={cn("w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all shrink-0", 
+                          (answers[q.id] as string[])?.includes(c.value) ? "border-current bg-current" : "border-gray-300 dark:border-gray-600 group-hover:border-gray-400 dark:group-hover:border-gray-500"
+                        )}>
+                          {(answers[q.id] as string[])?.includes(c.value) && <Check className="w-4 h-4 text-white dark:text-gray-900" strokeWidth={4} />}
                         </div>
-                        <span className={cn("text-base font-bold transition-colors", (answers[q.id] as string[])?.includes(c.value) ? "text-blue-700" : "text-gray-600")}>{c.label}</span>
+                        <span className="text-base font-bold">{c.label}</span>
                       </label>
                     ))}
                   </div>
@@ -203,7 +232,11 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                         <label key={num} className="cursor-pointer flex-1 min-w-[40px]">
                           <input type="radio" name={q.id} required={q.is_required} className="sr-only" onChange={() => handleInputChange(q.id, num)} />
-                          <div className={cn("h-14 flex items-center justify-center rounded-xl border-2 transition-all duration-300 text-lg font-black", answers[q.id] === num ? 'bg-blue-600 border-blue-600 text-white shadow-lg scale-105' : 'bg-white border-gray-100 text-gray-400 hover:border-gray-300 hover:text-gray-600')}>
+                          <div className={cn("h-14 flex items-center justify-center rounded-xl border-2 transition-all duration-300 text-lg font-black", 
+                            answers[q.id] === num 
+                              ? cn("text-white shadow-lg scale-105", theme.colors.primary) 
+                              : "bg-white/50 border-black/5 text-gray-400 hover:border-black/20"
+                          )}>
                             {num}
                           </div>
                         </label>
@@ -221,7 +254,11 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                     {[1, 2, 3, 4, 5].map((num) => (
                       <label key={num} className="cursor-pointer">
                         <input type="radio" name={q.id} required={q.is_required} className="sr-only" onChange={() => handleInputChange(q.id, num)} />
-                        <div className={cn("w-16 h-16 flex items-center justify-center rounded-[20px] border-2 transition-all duration-300 text-2xl font-black shadow-sm", answers[q.id] === num ? 'bg-blue-600 border-blue-600 text-white shadow-xl scale-110' : 'bg-white border-gray-100 text-gray-400 hover:border-gray-300 hover:text-gray-600')}>
+                        <div className={cn("w-16 h-16 flex items-center justify-center rounded-[20px] border-2 transition-all duration-300 text-2xl font-black shadow-sm", 
+                          answers[q.id] === num 
+                            ? cn("text-white shadow-xl scale-110", theme.colors.primary) 
+                            : "bg-white/50 border-black/5 text-gray-400 hover:border-black/20"
+                        )}>
                           {num}
                         </div>
                       </label>
@@ -234,7 +271,8 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                     {q.choices.map((c) => (
                       <label key={c.id} className={cn(
                         "relative flex flex-col cursor-pointer rounded-3xl border-2 transition-all duration-300 overflow-hidden group shadow-sm",
-                        answers[q.id] === c.value ? "border-blue-600 shadow-xl scale-[1.02]" : "border-gray-100 hover:border-gray-200"
+                        answers[q.id] === c.value ? "border-current shadow-xl scale-[1.02]" : "border-black/5 hover:border-black/10",
+                        theme.colors.accent
                       )}>
                         <input type="radio" name={q.id} required={q.is_required} className="sr-only" onChange={() => handleInputChange(q.id, c.value)} />
                         <div className="aspect-[4/3] bg-gray-50 relative overflow-hidden">
@@ -247,15 +285,17 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                             </div>
                           )}
                           {answers[q.id] === c.value && (
-                            <div className="absolute inset-0 bg-blue-600/10 flex items-center justify-center animate-in fade-in">
-                              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-xl">
+                            <div className="absolute inset-0 bg-current bg-opacity-10 flex items-center justify-center animate-in fade-in">
+                              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-xl">
                                 <Check className="w-6 h-6" strokeWidth={4} />
                               </div>
                             </div>
                           )}
                         </div>
-                        <div className="p-6 bg-white border-t border-gray-50">
-                          <span className={cn("text-base font-black tracking-tight transition-colors", answers[q.id] === c.value ? "text-blue-600" : "text-gray-900")}>
+                        <div className={cn("p-6 border-t border-black/5", theme.colors.card)}>
+                          <span className={cn("text-base font-black tracking-tight transition-colors", 
+                            answers[q.id] === c.value ? "text-current" : theme.colors.text
+                          )}>
                             {c.label || 'Untitled Option'}
                           </span>
                         </div>
@@ -267,12 +307,20 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
                 {['dropdown', 'date'].includes(q.question_type) && (
                   <div className="relative">
                     {q.question_type === 'dropdown' ? (
-                      <select required={q.is_required} className="w-full bg-white border-2 border-gray-100 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 rounded-2xl py-4 px-6 outline-none transition-all font-bold text-lg cursor-pointer appearance-none shadow-sm text-gray-700" onChange={(e) => handleInputChange(q.id, e.target.value)}>
+                      <select required={q.is_required} className={cn(
+                        "w-full border-2 focus:ring-4 focus:ring-opacity-10 rounded-2xl py-4 px-6 outline-none transition-all font-bold text-lg cursor-pointer appearance-none shadow-sm",
+                        theme.styles.inputStyle,
+                        theme.colors.text
+                      )} onChange={(e) => handleInputChange(q.id, e.target.value)}>
                         <option value="">Choose an option...</option>
                         {q.choices.map((c) => <option key={c.id} value={c.value}>{c.label}</option>)}
                       </select>
                     ) : (
-                      <input type="date" required={q.is_required} className="w-full bg-white border-2 border-gray-100 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 rounded-2xl py-4 px-6 outline-none transition-all font-bold text-lg cursor-pointer shadow-sm text-gray-700" onChange={(e) => handleInputChange(q.id, e.target.value)} />
+                      <input type="date" required={q.is_required} className={cn(
+                        "w-full border-2 focus:ring-4 focus:ring-opacity-10 rounded-2xl py-4 px-6 outline-none transition-all font-bold text-lg cursor-pointer shadow-sm",
+                        theme.styles.inputStyle,
+                        theme.colors.text
+                      )} onChange={(e) => handleInputChange(q.id, e.target.value)} />
                     )}
                   </div>
                 )}
@@ -286,20 +334,22 @@ export function SurveyResponseForm({ survey, questions }: SurveyResponseFormProp
               type="submit" 
               disabled={isSubmitting || survey.id === 'preview'} 
               className={cn(
-                "w-full sm:w-auto px-12 py-5 bg-gray-900 text-white text-lg font-black rounded-[24px] hover:bg-black transition-all shadow-2xl shadow-gray-200 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center min-w-[280px]", 
+                "w-full sm:w-auto px-12 py-5 text-white text-lg font-black transition-all shadow-2xl active:scale-[0.98] disabled:opacity-50 flex items-center justify-center min-w-[280px]", 
+                theme.colors.primary,
+                theme.styles.buttonRadius,
                 survey.id === 'preview' && "cursor-not-allowed"
               )}
             >
               {isSubmitting ? (
-                <><Loader2 className="w-5 h-5 animate-spin mr-3" /> Sending Response...</>
+                <><Loader2 className="w-5 h-5 animate-spin mr-3" /> Sending...</>
               ) : (
                 <>{survey.id === 'preview' ? 'Preview Mode Only' : 'Submit Survey'}</>
               )}
             </button>
             <div className="flex items-center gap-6 opacity-40 hover:opacity-100 transition-opacity">
-              <button type="button" onClick={() => setAnswers({})} className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] hover:text-blue-600 transition-colors">Reset Form</button>
+              <button type="button" onClick={() => setAnswers({})} className={cn("text-[10px] font-black uppercase tracking-[0.2em] hover:text-current transition-colors", theme.colors.text)}>Reset Form</button>
               <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-              <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">Secure Encryption</p>
+              <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.colors.text)}>Secure Encryption</p>
             </div>
           </div>
         </form>

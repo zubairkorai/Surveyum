@@ -1,26 +1,31 @@
-@import "tailwindcss/index.css";
+@import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* 
+  Tailwind v4 Native Dark Mode Variant 
+  This allows the 'dark:' class to work manually when the .dark class is on <html>
+*/
+@variant dark (&:where(.dark, .dark *));
+
+/* Standard Light Mode Defaults */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark Mode Variable Overrides */
+.dark {
+  --background: #0B0F19;
+  --foreground: #ededed;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease;
 }

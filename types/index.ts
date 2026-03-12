@@ -11,6 +11,7 @@ export type Survey = {
   title: string;
   description: string | null;
   is_published: boolean;
+  theme_id: string; // Defaults to 'minimal'
   created_at: string;
   updated_at: string;
   settings?: any; // JSONB

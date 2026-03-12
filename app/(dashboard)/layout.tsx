@@ -16,11 +16,11 @@ export default async function DashboardLayout({
     .single();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0B0F19] flex flex-col lg:flex-row transition-colors duration-300">
       <Sidebar profile={profile} userEmail={user?.email} />
 
       {/* Main Content */}
-      <main className="lg:ml-64 flex-1 w-full min-w-0">
+      <main className="lg:ml-64 flex-1 w-full min-w-0 bg-gray-50 dark:bg-[#0B0F19] transition-colors duration-300">
         {children}
       </main>
     </div>
