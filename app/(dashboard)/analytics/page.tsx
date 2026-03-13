@@ -5,6 +5,8 @@ import { Users, CheckCircle, Clock, ChevronLeft, Database, MessageSquare } from 
 import { Question, Choice } from '@/types';
 import LinkActual from 'next/link';
 import { cn } from '@/lib/utils';
+import { DownloadResponsesButton } from '@/components/analytics/DownloadResponsesButton';
+import { DownloadPdfButton } from '@/components/analytics/DownloadPdfButton';
 
 type QuestionWithStats = Question & {
   answerCount: number;
@@ -122,18 +124,20 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
           <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Survey Insights</p>
         </div>
         
-        <div className="flex gap-3">
-          <div className="bg-white dark:bg-gray-800/40 px-5 py-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 min-w-[120px]">
-            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Responses</p>
-            <p className="text-xl font-black text-gray-900 dark:text-white">{data.responseCount}</p>
+        <div className="flex flex-wrap items-stretch gap-3 md:w-auto">
+          <div className="bg-white dark:bg-gray-800/40 px-5 py-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 min-w-[130px] flex-1 flex flex-col justify-center">
+            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Responses</p>
+            <p className="text-xs font-black text-gray-900 dark:text-white uppercase">{data.responseCount} entries</p>
           </div>
-          <div className="bg-white dark:bg-gray-800/40 px-5 py-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 min-w-[120px]">
-            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Status</p>
-            <div className="flex items-center gap-1.5 mt-1">
+          <div className="bg-white dark:bg-gray-800/40 px-5 py-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 min-w-[130px] flex-1 flex flex-col justify-center">
+            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</p>
+            <div className="flex items-center gap-1.5">
               <div className={cn("w-1.5 h-1.5 rounded-full", data.survey.is_published ? "bg-green-500" : "bg-amber-500")} />
               <p className="text-[10px] font-bold text-gray-900 dark:text-white uppercase">{data.survey.is_published ? 'Live' : 'Draft'}</p>
             </div>
           </div>
+          <DownloadResponsesButton surveyId={id} />
+          <DownloadPdfButton surveyId={id} />
         </div>
       </div>
 

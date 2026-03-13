@@ -234,18 +234,19 @@ export function SurveyEditor({ initialSurvey, initialQuestions }: SurveyEditorPr
       {/* Preview Modal */}
       {isPreviewOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white md:bg-gray-50 w-full h-full md:max-w-5xl md:h-auto md:max-h-[90vh] md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col relative">
-            <div className="p-4 border-b bg-white flex items-center justify-between sticky top-0 z-10">
+          <div className="bg-white dark:bg-[#0B0F19] md:bg-gray-50 dark:md:bg-[#0f172a] w-full h-full md:max-w-5xl md:h-auto md:max-h-[90vh] md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col relative border-none dark:border dark:border-gray-800">
+            <div className="p-4 border-b dark:border-gray-800 bg-white dark:bg-[#0B0F19] flex items-center justify-between sticky top-0 z-10">
               <div className="flex items-center gap-2">
                 <Eye className="w-5 h-5 text-blue-600" />
-                <h2 className="font-black text-gray-900 uppercase tracking-widest text-sm">Live Preview</h2>
+                <h2 className="font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest text-sm">Live Preview</h2>
               </div>
-              <button onClick={() => setIsPreviewOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500 hover:text-gray-900">
+              <button onClick={() => setIsPreviewOpen(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-gray-100">
                 <X className="w-6 h-6" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto pb-12">
-              <SurveyResponseForm 
+            <div className="flex-1 overflow-y-auto pb-12 custom-scrollbar">
+              <SurveyResponseForm
+ 
                 survey={{ id: 'preview', title, theme_id: themeId, description, is_published: false, user_id: '', created_at: '', updated_at: '' }} 
                 questions={questions as (Question & { choices: Choice[] })[]} 
               />
